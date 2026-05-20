@@ -60,29 +60,41 @@
     flex-shrink: 0;
   }
   .logo span { color: var(--accent-new); }
-  .header-divider {
-    width: 1px;
-    height: 20px;
-    background: var(--border);
+  .header-divider { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+  .header-subtitle { font-size: 13px; color: var(--text-muted); flex: 1; }
+  #last-updated { font-size: 12px; color: var(--text-muted); font-family: var(--font-en); }
+
+  /* ── View toggle ── */
+  .view-toggle {
+    display: flex;
+    gap: 2px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3px;
     flex-shrink: 0;
   }
-  .header-subtitle {
-    font-size: 13px;
+  .view-btn {
+    width: 32px; height: 28px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--text-muted);
-    flex: 1;
+    transition: all 0.15s;
   }
-  #last-updated {
-    font-size: 12px;
-    color: var(--text-muted);
-    font-family: var(--font-en);
+  .view-btn.active {
+    background: var(--surface);
+    color: var(--text-primary);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   }
+  .view-btn:hover:not(.active) { color: var(--text-secondary); }
 
-  /* ── Main Layout ── */
-  main {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 32px 32px 64px;
-  }
+  /* ── Main ── */
+  main { max-width: 1280px; margin: 0 auto; padding: 32px 32px 64px; }
 
   /* ── Filter Bar ── */
   .filter-bar {
@@ -100,11 +112,7 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
-  .filter-group {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
+  .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
   .filter-btn {
     padding: 6px 14px;
     border-radius: 100px;
@@ -118,32 +126,16 @@
     white-space: nowrap;
   }
   .filter-btn:hover { border-color: var(--text-secondary); color: var(--text-primary); }
-  .filter-btn.active {
-    background: var(--text-primary);
-    color: #fff;
-    border-color: var(--text-primary);
-  }
-  .filter-divider {
-    width: 1px;
-    height: 24px;
-    background: var(--border);
-    margin: 0 4px;
-  }
-  .count-badge {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-left: auto;
-    font-family: var(--font-en);
-  }
+  .filter-btn.active { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
+  .filter-divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
+  .count-badge { font-size: 12px; color: var(--text-muted); margin-left: auto; font-family: var(--font-en); }
 
-  /* ── Grid ── */
+  /* ── CARD VIEW (画像あり) ── */
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 16px;
   }
-
-  /* ── Card ── */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -158,39 +150,21 @@
     transform: translateY(8px);
     animation: fadeUp 0.3s forwards;
   }
-  .card:hover {
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-2px);
-  }
-  @keyframes fadeUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
+  .card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
-  .card-thumb {
-    width: 100%;
-    aspect-ratio: 4/3;
-    object-fit: cover;
-    background: var(--bg);
-    display: block;
-    position: relative;
-  }
-  .thumb-wrap {
-    position: relative;
-    overflow: hidden;
-  }
+  .thumb-wrap { position: relative; overflow: hidden; }
   .thumb-wrap img {
     width: 100%;
-    aspect-ratio: 4/3;
+    aspect-ratio: 16/9;
     object-fit: cover;
     display: block;
     transition: transform 0.3s;
   }
   .card:hover .thumb-wrap img { transform: scale(1.03); }
-
-  /* placeholder when no image */
   .thumb-placeholder {
     width: 100%;
-    aspect-ratio: 4/3;
+    aspect-ratio: 16/9;
     background: linear-gradient(135deg, #EEECEA 0%, #E2E0D8 100%);
     display: flex;
     align-items: center;
@@ -198,19 +172,8 @@
   }
   .thumb-placeholder svg { opacity: 0.25; }
 
-  .card-body {
-    padding: 14px 16px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex: 1;
-  }
-
-  .card-tags {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-  }
+  .card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .card-tags { display: flex; gap: 4px; flex-wrap: wrap; }
   .tag {
     font-size: 11px;
     padding: 2px 8px;
@@ -223,28 +186,43 @@
   }
   .tag.new { background: #EBF1FC; color: #2255B8; }
   .tag.mid { background: #E8F7F1; color: #0E7A45; }
-
-  .card-title {
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.5;
-    color: var(--text-primary);
-    flex: 1;
-  }
-
+  .card-title { font-size: 14px; font-weight: 500; line-height: 1.5; color: var(--text-primary); flex: 1; }
   .card-open {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     font-size: 12px;
     color: var(--accent-new);
-    text-decoration: none;
     font-weight: 500;
     margin-top: 4px;
     transition: gap 0.15s;
   }
   .card-open:hover { gap: 8px; }
-  .card-open svg { flex-shrink: 0; }
+
+  /* ── LIST VIEW (タイトルのみ) ── */
+  .list { display: flex; flex-direction: column; gap: 0; }
+  .list-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    border-bottom: none;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+    opacity: 0;
+    animation: fadeUp 0.2s forwards;
+  }
+  .list-item:first-child { border-radius: var(--radius) var(--radius) 0 0; }
+  .list-item:last-child { border-bottom: 1px solid var(--border); border-radius: 0 0 var(--radius) var(--radius); }
+  .list-item:only-child { border-radius: var(--radius); border-bottom: 1px solid var(--border); }
+  .list-item:hover { background: var(--bg); }
+  .list-item-tags { display: flex; gap: 4px; flex-shrink: 0; }
+  .list-item-title { font-size: 14px; font-weight: 500; flex: 1; line-height: 1.4; }
+  .list-item-category { font-size: 12px; color: var(--text-muted); flex-shrink: 0; }
+  .list-item-arrow { color: var(--text-muted); flex-shrink: 0; }
 
   /* ── Modal ── */
   .modal-overlay {
@@ -261,10 +239,7 @@
     pointer-events: none;
     transition: opacity 0.2s;
   }
-  .modal-overlay.open {
-    opacity: 1;
-    pointer-events: auto;
-  }
+  .modal-overlay.open { opacity: 1; pointer-events: auto; }
   .modal {
     background: var(--surface);
     border-radius: 16px;
@@ -292,75 +267,36 @@
   .modal-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px; }
   .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
   .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 20px;
-    border-radius: 8px;
-    background: var(--text-primary);
-    color: #fff;
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    font-family: var(--font-jp);
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 20px; border-radius: 8px;
+    background: var(--text-primary); color: #fff;
+    font-size: 14px; font-weight: 500; text-decoration: none;
+    border: none; cursor: pointer; font-family: var(--font-jp);
     transition: opacity 0.15s;
   }
   .btn-primary:hover { opacity: 0.85; }
   .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 20px;
-    border-radius: 8px;
-    background: #FFF1EE;
-    color: #C0391A;
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-    border: 1px solid #F5C4B8;
-    cursor: pointer;
-    font-family: var(--font-jp);
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 20px; border-radius: 8px;
+    background: #FFF1EE; color: #C0391A;
+    font-size: 14px; font-weight: 500; text-decoration: none;
+    border: 1px solid #F5C4B8; cursor: pointer; font-family: var(--font-jp);
     transition: opacity 0.15s;
   }
   .btn-secondary:hover { opacity: 0.8; }
   .btn-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.5);
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 18px;
-    transition: background 0.15s;
+    position: absolute; top: 16px; right: 16px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(0,0,0,0.5); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 18px; transition: background 0.15s;
   }
   .btn-close:hover { background: rgba(0,0,0,0.75); }
   .modal-inner { position: relative; }
 
-  /* ── Empty state ── */
-  .empty {
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 80px 20px;
-    color: var(--text-muted);
-    font-size: 14px;
-  }
-
-  /* ── Loading ── */
-  .loading {
-    grid-column: 1/-1;
-    display: flex;
-    justify-content: center;
-    padding: 80px;
-  }
+  /* ── Empty / Loading ── */
+  .empty { grid-column: 1/-1; text-align: center; padding: 80px 20px; color: var(--text-muted); font-size: 14px; }
+  .loading { grid-column: 1/-1; display: flex; justify-content: center; padding: 80px; }
   .spinner {
     width: 32px; height: 32px;
     border: 2px solid var(--border);
@@ -379,6 +315,20 @@
     <div class="header-divider"></div>
     <div class="header-subtitle">資料ライブラリ</div>
     <div id="last-updated"></div>
+    <!-- 表示切り替えボタン -->
+    <div class="view-toggle">
+      <button class="view-btn active" id="btn-card" onclick="setView('card')" title="カード表示">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+      </button>
+      <button class="view-btn" id="btn-list" onclick="setView('list')" title="リスト表示">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -427,136 +377,23 @@
 </div>
 
 <script>
-// ============================================================
-// 設定：本番環境では _API_URL を Apps Script の URL に変更
-// ============================================================
 const CONFIG = {
   SHEET_API_URL: 'https://script.google.com/a/macros/hr-cloud.co.jp/s/AKfycbwF2QgDN8nO5QccifAvh0a6msrbK6MtMro-DP6UrelfLXad3Bvifo14pYysVT3PNqW_IQ/exec',
   USE_SAMPLE_DATA: false,
 };
 
-// ── サンプルデータ ──────────────────────────────────────────
 const SAMPLE_DATA = [
-  {
-    title: '採用説明資料（会社紹介）',
-    category: '会社紹介',
-    target: '新卒',
-    fileUrl: '#',
-    thumbUrl: '',
-    pdfUrl: '#',
-    description: '会社の事業内容・カルチャー・働き方をまとめた説明会用資料です。',
-  },
-  {
-    title: '採用説明資料（中途向け）',
-    category: '会社紹介',
-    target: '中途',
-    fileUrl: '#',
-    thumbUrl: '',
-    pdfUrl: '#',
-    description: '中途採用向けに特化したポジション説明・キャリアパス紹介資料。',
-  },
-  {
-    title: '営業資料（標準版）',
-    category: '営業資料',
-    target: '新卒',
-    fileUrl: '#',
-    thumbUrl: '',
-    pdfUrl: '#',
-    description: '新規顧客向けのサービス紹介・料金プラン・導入事例を含む標準営業資料。',
-  },
-  {
-    title: '営業資料（中途採用特化）',
-    category: '営業資料',
-    target: '中途',
-    fileUrl: '#',
-    thumbUrl: '',
-    pdfUrl: '#',
-    description: '中途採用市場向けにカスタマイズされた提案資料。実績データ入り。',
-  },
-  {
-    title: '料金詳細・プラン比較',
-    category: '料金・契約',
-    target: '新卒',
-    fileUrl: '#',
-    thumbUrl: '',
-    pdfUrl: '#',
-    description: '各プランの機能比較・価格・割引条件をまとめた資料。',
-  },
-  {
-    title: '稟議書テンプレート',
-    category: '料金・契約',
-    target: '中途',
-    fileUrl: '#',
-    thumbUrl: '',
-    pdfUrl: '#',
-    description: '顧客が社内承認を得るための稟議書フォーマット。カスタマイズ可。',
-  },
-  {
-    title: 'LINE連携 機能紹介',
-    category: '機能紹介',
-    target: '新卒',
-    fileUrl: '#',
-    thumbUrl: '',
-    pdfUrl: '#',
-    description: 'LINE公式アカウントとの連携機能を解説した機能紹介資料。',
-  },
-  {
-    title: 'HREX 展示会資料',
-    category: '展示会',
-    target: '中途',
-    fileUrl: '#',
-    thumbUrl: '',
-    pdfUrl: '#',
-    description: 'HREX出展時に使用した展示会向けのサービス紹介パネル・配布物。',
-  },
-  {
-    title: '採用戦略ガイド 2024',
-    category: '採用戦略',
-    target: '新卒',
-    fileUrl: '#',
-    thumbUrl: '',
-    pdfUrl: '#',
-    description: '新卒採用のトレンド・スケジュール・施策をまとめた戦略資料。',
-  },
-  {
-    title: 'はじめてのHRクラウド',
-    category: '導入支援',
-    target: '中途',
-    fileUrl: '#',
-    thumbUrl: '',
-    pdfUrl: '#',
-    description: '新規導入ユーザー向けのオンボーディング資料。ステップ形式で解説。',
-  },
-  {
-    title: '採用担当者向けマニュアル',
-    category: '導入支援',
-    target: '新卒',
-    fileUrl: '#',
-    thumbUrl: '',
-    pdfUrl: '#',
-    description: 'HRクラウドの管理画面操作・設定方法をまとめたマニュアル。',
-  },
-  {
-    title: '経営層向けダイジェスト',
-    category: '経営向け',
-    target: '中途',
-    fileUrl: '#',
-    thumbUrl: '',
-    pdfUrl: '#',
-    description: '導入ROI・他社比較・課題解決のサマリーを経営層向けに凝縮した資料。',
-  },
+  { title: '採用説明資料（会社紹介）', category: '会社紹介', target: '新卒', fileUrl: '#', thumbUrl: '', pdfUrl: '#', description: '会社の事業内容・カルチャー・働き方をまとめた説明会用資料です。' },
+  { title: '営業資料（標準版）', category: '営業資料', target: '新卒', fileUrl: '#', thumbUrl: '', pdfUrl: '#', description: '新規顧客向けのサービス紹介・料金プラン・導入事例を含む標準営業資料。' },
+  { title: 'LINE連携 機能紹介', category: '機能紹介', target: '新卒', fileUrl: '#', thumbUrl: '', pdfUrl: '#', description: 'LINE公式アカウントとの連携機能を解説した機能紹介資料。' },
 ];
 
-// ── JSONP fetch（CORS回避）────────────────────────────────────
+// ── JSONP fetch（CORS回避）
 function fetchGAS(url) {
   return new Promise((resolve, reject) => {
     const cbName = 'cb_' + Date.now();
     const script = document.createElement('script');
-    window[cbName] = (data) => {
-      delete window[cbName];
-      document.body.removeChild(script);
-      resolve(data);
-    };
+    window[cbName] = (data) => { delete window[cbName]; document.body.removeChild(script); resolve(data); };
     script.onerror = () => reject(new Error('読み込み失敗'));
     script.src = url + '?callback=' + cbName;
     document.body.appendChild(script);
@@ -564,12 +401,21 @@ function fetchGAS(url) {
   });
 }
 
-// ── State ────────────────────────────────────────────────────
+// ── State
 let allData = [];
 let activeTarget = 'all';
 let activeCategory = 'all';
+let currentView = 'card'; // 'card' or 'list'
 
-// ── Fetch & Init ─────────────────────────────────────────────
+// ── View切り替え
+function setView(mode) {
+  currentView = mode;
+  document.getElementById('btn-card').classList.toggle('active', mode === 'card');
+  document.getElementById('btn-list').classList.toggle('active', mode === 'list');
+  render();
+}
+
+// ── Init
 async function init() {
   if (CONFIG.USE_SAMPLE_DATA) {
     allData = SAMPLE_DATA;
@@ -590,7 +436,6 @@ async function init() {
   render();
 }
 
-// ── Build category filters dynamically ───────────────────────
 function buildCategoryFilters() {
   const cats = ['all', ...new Set(allData.map(d => d.category))];
   const wrap = document.getElementById('category-filters');
@@ -599,7 +444,6 @@ function buildCategoryFilters() {
   ).join('');
 }
 
-// ── Filter handlers ──────────────────────────────────────────
 document.getElementById('target-filters').addEventListener('click', e => {
   const btn = e.target.closest('[data-target]');
   if (!btn) return;
@@ -615,7 +459,7 @@ function setCategory(cat) {
   render();
 }
 
-// ── Render ───────────────────────────────────────────────────
+// ── Render
 function render() {
   const filtered = allData.filter(d => {
     const targetOk = activeTarget === 'all' || d.target === activeTarget;
@@ -630,34 +474,49 @@ function render() {
     return;
   }
 
-  document.getElementById('grid').innerHTML = filtered.map((d, i) => `
-    <div class="card" style="animation-delay:${i * 30}ms" onclick="openModal(${allData.indexOf(d)})">
-      <div class="thumb-wrap">
-        ${d.thumbUrl
-          ? `<img src="${d.thumbUrl}" alt="${d.title}" loading="lazy">`
-          : `<div class="thumb-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>`
-        }
-      </div>
-      <div class="card-body">
-        <div class="card-tags">
-          <span class="tag ${d.target === '新卒' ? 'new' : 'mid'}">${d.target}</span>
-          <span class="tag">${d.category}</span>
+  const grid = document.getElementById('grid');
+
+  if (currentView === 'card') {
+    grid.className = 'grid';
+    grid.innerHTML = filtered.map((d, i) => `
+      <div class="card" style="animation-delay:${i * 30}ms" onclick="openModal(${allData.indexOf(d)})">
+        <div class="thumb-wrap">
+          ${d.thumbUrl
+            ? `<img src="${d.thumbUrl}" alt="${d.title}" loading="lazy">`
+            : `<div class="thumb-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>`
+          }
         </div>
-        <div class="card-title">${d.title}</div>
-        <span class="card-open">
-          開く
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-        </span>
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="tag ${d.target === '新卒' ? 'new' : 'mid'}">${d.target}</span>
+            <span class="tag">${d.category}</span>
+          </div>
+          <div class="card-title">${d.title}</div>
+          <span class="card-open">
+            開く
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          </span>
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  } else {
+    grid.className = 'list';
+    grid.innerHTML = filtered.map((d, i) => `
+      <div class="list-item" style="animation-delay:${i * 20}ms" onclick="openModal(${allData.indexOf(d)})">
+        <div class="list-item-tags">
+          <span class="tag ${d.target === '新卒' ? 'new' : 'mid'}">${d.target}</span>
+        </div>
+        <div class="list-item-title">${d.title}</div>
+        <div class="list-item-category">${d.category}</div>
+        <svg class="list-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+    `).join('');
+  }
 }
 
-// ── Modal ────────────────────────────────────────────────────
+// ── Modal
 function openModal(idx) {
   const d = allData[idx];
-  const overlay = document.getElementById('modal-overlay');
-
   document.getElementById('modal-img').src = d.thumbUrl || '';
   document.getElementById('modal-img').style.display = d.thumbUrl ? 'block' : 'none';
   document.getElementById('modal-tags').innerHTML =
@@ -673,7 +532,7 @@ function openModal(idx) {
   pdfEl.href = d.pdfUrl || '#';
   pdfEl.style.display = d.pdfUrl && d.pdfUrl !== '#' ? 'inline-flex' : 'none';
 
-  overlay.classList.add('open');
+  document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
@@ -686,7 +545,6 @@ function closeModal(e) {
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-// ── Boot ─────────────────────────────────────────────────────
 init();
 </script>
 </body>
