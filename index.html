@@ -428,11 +428,11 @@
 
 <script>
 // ============================================================
-// 設定：本番環境では SHEET_API_URL を Apps Script の URL に変更
+// 設定：本番環境では _API_URL を Apps Script の URL に変更
 // ============================================================
 const CONFIG = {
   // ▼ 本番：Google Apps Script のデプロイURL をここに貼り付ける
-  // SHEET_API_URL: 'https://script.google.com/a/macros/hr-cloud.co.jp/s/AKfycbyQXhZXkEZw-dZevQdIqTgnWSW6_aNYa40zXc-QXGo5EEVwyh__FmIxUmCpwYA2o6EMmg/exec',
+  // SHEET_API_URL: 'https://script.google.com/a/macros/hr-cloud.co.jp/s/AKfycbwF2QgDN8nO5QccifAvh0a6msrbK6MtMro-DP6UrelfLXad3Bvifo14pYysVT3PNqW_IQ/exec',
 
   // ▼ デモ用のサンプルデータ（本番時はコメントアウト）
   USE_SAMPLE_DATA: false,
@@ -550,6 +550,23 @@ const SAMPLE_DATA = [
   },
 ];
 
+// ── JSONP fetch（CORS回避）────────────────────────────────────
+function fetchGAS(url) {
+  return new Promise((resolve, reject) => {
+    const cbName = 'cb_' + Date.now();
+    const script = document.createElement('script');
+    window[cbName] = (data) => {
+      delete window[cbName];
+      document.body.removeChild(script);
+      resolve(data);
+    };
+    script.onerror = () => reject(new Error('読み込み失敗'));
+    script.src = url + '?callback=' + cbName;
+    document.body.appendChild(script);
+    setTimeout(() => reject(new Error('タイムアウト')), 10000);
+  });
+}
+
 // ── State ────────────────────────────────────────────────────
 let allData = [];
 let activeTarget = 'all';
@@ -562,8 +579,7 @@ async function init() {
     document.getElementById('last-updated').textContent = 'サンプルデータ表示中';
   } else {
     try {
-      const res = await fetch(CONFIG.SHEET_API_URL);
-      const json = await res.json();
+      const json = await fetchGAS(CONFIG.SHEET_API_URL);
       allData = json.data;
       document.getElementById('last-updated').textContent =
         '最終更新: ' + new Date(json.updatedAt).toLocaleString('ja-JP', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
