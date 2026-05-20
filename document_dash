@@ -1,1 +1,680 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR資料ダッシュボード</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F4F0;
+    --surface: #FFFFFF;
+    --border: #E2E0D8;
+    --text-primary: #1A1916;
+    --text-secondary: #6B6860;
+    --text-muted: #9C9A92;
+    --accent-new: #2D6BE4;
+    --accent-mid: #12A05C;
+    --tag-bg: #EEECEA;
+    --tag-text: #4A4844;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.10), 0 12px 40px rgba(0,0,0,0.08);
+    --radius: 12px;
+    --font-jp: 'Noto Sans JP', sans-serif;
+    --font-en: 'DM Sans', sans-serif;
+  }
 
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: var(--font-jp);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo {
+    font-family: var(--font-en);
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    flex-shrink: 0;
+  }
+  .logo span { color: var(--accent-new); }
+  .header-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+  .header-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    flex: 1;
+  }
+  #last-updated {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: var(--font-en);
+  }
+
+  /* ── Main Layout ── */
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 32px 64px;
+  }
+
+  /* ── Filter Bar ── */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+    align-items: center;
+  }
+  .filter-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-right: 4px;
+    font-family: var(--font-en);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .filter-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 13px;
+    font-family: var(--font-jp);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+  .filter-btn.active {
+    background: var(--text-primary);
+    color: #fff;
+    border-color: var(--text-primary);
+  }
+  .filter-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+    margin: 0 4px;
+  }
+  .count-badge {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-left: auto;
+    font-family: var(--font-en);
+  }
+
+  /* ── Grid ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: fadeUp 0.3s forwards;
+  }
+  .card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-thumb {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    background: var(--bg);
+    display: block;
+    position: relative;
+  }
+  .thumb-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+  .thumb-wrap img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s;
+  }
+  .card:hover .thumb-wrap img { transform: scale(1.03); }
+
+  /* placeholder when no image */
+  .thumb-placeholder {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, #EEECEA 0%, #E2E0D8 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .thumb-placeholder svg { opacity: 0.25; }
+
+  .card-body {
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .card-tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-family: var(--font-jp);
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .tag.new { background: #EBF1FC; color: #2255B8; }
+  .tag.mid { background: #E8F7F1; color: #0E7A45; }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--text-primary);
+    flex: 1;
+  }
+
+  .card-open {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--accent-new);
+    text-decoration: none;
+    font-weight: 500;
+    margin-top: 4px;
+    transition: gap 0.15s;
+  }
+  .card-open:hover { gap: 8px; }
+  .card-open svg { flex-shrink: 0; }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20,19,18,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal {
+    background: var(--surface);
+    border-radius: 16px;
+    max-width: 680px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: scale(0.96);
+    transition: transform 0.2s;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .modal-overlay.open .modal { transform: scale(1); }
+  .modal-img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    border-radius: 16px 16px 0 0;
+    display: block;
+    background: var(--bg);
+  }
+  .modal-body { padding: 24px 28px 28px; }
+  .modal-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .modal-title { font-size: 22px; font-weight: 600; line-height: 1.4; margin-bottom: 8px; }
+  .modal-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px; }
+  .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: var(--text-primary);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-jp);
+    transition: opacity 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: #FFF1EE;
+    color: #C0391A;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid #F5C4B8;
+    cursor: pointer;
+    font-family: var(--font-jp);
+    transition: opacity 0.15s;
+  }
+  .btn-secondary:hover { opacity: 0.8; }
+  .btn-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 18px;
+    transition: background 0.15s;
+  }
+  .btn-close:hover { background: rgba(0,0,0,0.75); }
+  .modal-inner { position: relative; }
+
+  /* ── Empty state ── */
+  .empty {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  /* ── Loading ── */
+  .loading {
+    grid-column: 1/-1;
+    display: flex;
+    justify-content: center;
+    padding: 80px;
+  }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--border);
+    border-top-color: var(--text-primary);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">HR<span>Cloud</span></div>
+    <div class="header-divider"></div>
+    <div class="header-subtitle">資料ライブラリ</div>
+    <div id="last-updated"></div>
+  </div>
+</header>
+
+<main>
+  <div class="filter-bar">
+    <span class="filter-label">対象</span>
+    <div class="filter-group" id="target-filters">
+      <button class="filter-btn active" data-target="all">すべて</button>
+      <button class="filter-btn" data-target="新卒">新卒</button>
+      <button class="filter-btn" data-target="中途">中途</button>
+    </div>
+    <div class="filter-divider"></div>
+    <span class="filter-label">カテゴリ</span>
+    <div class="filter-group" id="category-filters"></div>
+    <span class="count-badge" id="count-badge"></span>
+  </div>
+
+  <div class="grid" id="grid">
+    <div class="loading"><div class="spinner"></div></div>
+  </div>
+</main>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-inner">
+      <button class="btn-close" onclick="closeModal()">✕</button>
+      <img id="modal-img" class="modal-img" src="" alt="">
+      <div class="modal-body">
+        <div class="modal-tags" id="modal-tags"></div>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-desc" id="modal-desc"></div>
+        <div class="modal-actions">
+          <a id="modal-link" class="btn-primary" href="#" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            資料を開く
+          </a>
+          <a id="modal-pdf-link" class="btn-secondary" href="#" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+            PDFで開く
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 設定：本番環境では SHEET_API_URL を Apps Script の URL に変更
+// ============================================================
+const CONFIG = {
+  // ▼ 本番：Google Apps Script のデプロイURL をここに貼り付ける
+  // SHEET_API_URL: 'https://script.google.com/a/macros/hr-cloud.co.jp/s/AKfycbyQXhZXkEZw-dZevQdIqTgnWSW6_aNYa40zXc-QXGo5EEVwyh__FmIxUmCpwYA2o6EMmg/exec',
+
+  // ▼ デモ用のサンプルデータ（本番時はコメントアウト）
+  USE_SAMPLE_DATA: true,
+};
+
+// ── サンプルデータ ──────────────────────────────────────────
+const SAMPLE_DATA = [
+  {
+    title: '採用説明資料（会社紹介）',
+    category: '会社紹介',
+    target: '新卒',
+    fileUrl: '#',
+    thumbUrl: '',
+    pdfUrl: '#',
+    description: '会社の事業内容・カルチャー・働き方をまとめた説明会用資料です。',
+  },
+  {
+    title: '採用説明資料（中途向け）',
+    category: '会社紹介',
+    target: '中途',
+    fileUrl: '#',
+    thumbUrl: '',
+    pdfUrl: '#',
+    description: '中途採用向けに特化したポジション説明・キャリアパス紹介資料。',
+  },
+  {
+    title: '営業資料（標準版）',
+    category: '営業資料',
+    target: '新卒',
+    fileUrl: '#',
+    thumbUrl: '',
+    pdfUrl: '#',
+    description: '新規顧客向けのサービス紹介・料金プラン・導入事例を含む標準営業資料。',
+  },
+  {
+    title: '営業資料（中途採用特化）',
+    category: '営業資料',
+    target: '中途',
+    fileUrl: '#',
+    thumbUrl: '',
+    pdfUrl: '#',
+    description: '中途採用市場向けにカスタマイズされた提案資料。実績データ入り。',
+  },
+  {
+    title: '料金詳細・プラン比較',
+    category: '料金・契約',
+    target: '新卒',
+    fileUrl: '#',
+    thumbUrl: '',
+    pdfUrl: '#',
+    description: '各プランの機能比較・価格・割引条件をまとめた資料。',
+  },
+  {
+    title: '稟議書テンプレート',
+    category: '料金・契約',
+    target: '中途',
+    fileUrl: '#',
+    thumbUrl: '',
+    pdfUrl: '#',
+    description: '顧客が社内承認を得るための稟議書フォーマット。カスタマイズ可。',
+  },
+  {
+    title: 'LINE連携 機能紹介',
+    category: '機能紹介',
+    target: '新卒',
+    fileUrl: '#',
+    thumbUrl: '',
+    pdfUrl: '#',
+    description: 'LINE公式アカウントとの連携機能を解説した機能紹介資料。',
+  },
+  {
+    title: 'HREX 展示会資料',
+    category: '展示会',
+    target: '中途',
+    fileUrl: '#',
+    thumbUrl: '',
+    pdfUrl: '#',
+    description: 'HREX出展時に使用した展示会向けのサービス紹介パネル・配布物。',
+  },
+  {
+    title: '採用戦略ガイド 2024',
+    category: '採用戦略',
+    target: '新卒',
+    fileUrl: '#',
+    thumbUrl: '',
+    pdfUrl: '#',
+    description: '新卒採用のトレンド・スケジュール・施策をまとめた戦略資料。',
+  },
+  {
+    title: 'はじめてのHRクラウド',
+    category: '導入支援',
+    target: '中途',
+    fileUrl: '#',
+    thumbUrl: '',
+    pdfUrl: '#',
+    description: '新規導入ユーザー向けのオンボーディング資料。ステップ形式で解説。',
+  },
+  {
+    title: '採用担当者向けマニュアル',
+    category: '導入支援',
+    target: '新卒',
+    fileUrl: '#',
+    thumbUrl: '',
+    pdfUrl: '#',
+    description: 'HRクラウドの管理画面操作・設定方法をまとめたマニュアル。',
+  },
+  {
+    title: '経営層向けダイジェスト',
+    category: '経営向け',
+    target: '中途',
+    fileUrl: '#',
+    thumbUrl: '',
+    pdfUrl: '#',
+    description: '導入ROI・他社比較・課題解決のサマリーを経営層向けに凝縮した資料。',
+  },
+];
+
+// ── State ────────────────────────────────────────────────────
+let allData = [];
+let activeTarget = 'all';
+let activeCategory = 'all';
+
+// ── Fetch & Init ─────────────────────────────────────────────
+async function init() {
+  if (CONFIG.USE_SAMPLE_DATA) {
+    allData = SAMPLE_DATA;
+    document.getElementById('last-updated').textContent = 'サンプルデータ表示中';
+  } else {
+    try {
+      const res = await fetch(CONFIG.SHEET_API_URL);
+      const json = await res.json();
+      allData = json.data;
+      document.getElementById('last-updated').textContent =
+        '最終更新: ' + new Date(json.updatedAt).toLocaleString('ja-JP', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
+    } catch(e) {
+      document.getElementById('grid').innerHTML =
+        '<div class="empty">データの読み込みに失敗しました。<br>Apps Script のURLを確認してください。</div>';
+      return;
+    }
+  }
+  buildCategoryFilters();
+  render();
+}
+
+// ── Build category filters dynamically ───────────────────────
+function buildCategoryFilters() {
+  const cats = ['all', ...new Set(allData.map(d => d.category))];
+  const wrap = document.getElementById('category-filters');
+  wrap.innerHTML = cats.map(c =>
+    `<button class="filter-btn${c==='all'?' active':''}" data-category="${c}" onclick="setCategory('${c}')">${c === 'all' ? 'すべて' : c}</button>`
+  ).join('');
+}
+
+// ── Filter handlers ──────────────────────────────────────────
+document.getElementById('target-filters').addEventListener('click', e => {
+  const btn = e.target.closest('[data-target]');
+  if (!btn) return;
+  activeTarget = btn.dataset.target;
+  document.querySelectorAll('[data-target]').forEach(b => b.classList.toggle('active', b===btn));
+  render();
+});
+
+function setCategory(cat) {
+  activeCategory = cat;
+  document.querySelectorAll('[data-category]').forEach(b =>
+    b.classList.toggle('active', b.dataset.category === cat));
+  render();
+}
+
+// ── Render ───────────────────────────────────────────────────
+function render() {
+  const filtered = allData.filter(d => {
+    const targetOk = activeTarget === 'all' || d.target === activeTarget;
+    const catOk    = activeCategory === 'all' || d.category === activeCategory;
+    return targetOk && catOk;
+  });
+
+  document.getElementById('count-badge').textContent = `${filtered.length} 件`;
+
+  if (!filtered.length) {
+    document.getElementById('grid').innerHTML = '<div class="empty">該当する資料がありません。</div>';
+    return;
+  }
+
+  document.getElementById('grid').innerHTML = filtered.map((d, i) => `
+    <div class="card" style="animation-delay:${i * 30}ms" onclick="openModal(${allData.indexOf(d)})">
+      <div class="thumb-wrap">
+        ${d.thumbUrl
+          ? `<img src="${d.thumbUrl}" alt="${d.title}" loading="lazy">`
+          : `<div class="thumb-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>`
+        }
+      </div>
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="tag ${d.target === '新卒' ? 'new' : 'mid'}">${d.target}</span>
+          <span class="tag">${d.category}</span>
+        </div>
+        <div class="card-title">${d.title}</div>
+        <span class="card-open">
+          開く
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        </span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Modal ────────────────────────────────────────────────────
+function openModal(idx) {
+  const d = allData[idx];
+  const overlay = document.getElementById('modal-overlay');
+
+  document.getElementById('modal-img').src = d.thumbUrl || '';
+  document.getElementById('modal-img').style.display = d.thumbUrl ? 'block' : 'none';
+  document.getElementById('modal-tags').innerHTML =
+    `<span class="tag ${d.target==='新卒'?'new':'mid'}">${d.target}</span><span class="tag">${d.category}</span>`;
+  document.getElementById('modal-title').textContent = d.title;
+  document.getElementById('modal-desc').textContent = d.description || '';
+
+  const linkEl = document.getElementById('modal-link');
+  linkEl.href = d.fileUrl || '#';
+  linkEl.style.display = d.fileUrl && d.fileUrl !== '#' ? 'inline-flex' : 'none';
+
+  const pdfEl = document.getElementById('modal-pdf-link');
+  pdfEl.href = d.pdfUrl || '#';
+  pdfEl.style.display = d.pdfUrl && d.pdfUrl !== '#' ? 'inline-flex' : 'none';
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modal-overlay') && e.type !== 'click') return;
+  if (e && e.currentTarget !== e.target && e.target.closest('.modal')) return;
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── Boot ─────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
