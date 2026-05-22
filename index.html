@@ -316,12 +316,17 @@ function setView(mode) {
 async function init() {
   try {
     const json = await fetchGAS(CONFIG.SHEET_API_URL);
-    allDocs  = json.docs || json.data || [];
-    if (json.cases && json.cases.length) allCases = json.cases;
+    console.log('API response:', json); // デバッグ用
+    allDocs  = Array.isArray(json.docs)  ? json.docs  :
+               Array.isArray(json.data)  ? json.data  : [];
+    allCases = Array.isArray(json.cases) && json.cases.length ? json.cases : SAMPLE_CASES;
     document.getElementById('last-updated').textContent =
       '最終更新: ' + new Date(json.updatedAt).toLocaleString('ja-JP', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
   } catch(e) {
-    document.getElementById('grid').innerHTML = '<div class="empty">データの読み込みに失敗しました。</div>';
+    console.error('fetch error:', e);
+    allDocs  = [];
+    allCases = SAMPLE_CASES;
+    document.getElementById('last-updated').textContent = '読み込みエラー';
   }
   buildDocFilters();
   buildCaseDropdowns();
