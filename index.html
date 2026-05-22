@@ -3,118 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HR資料ダッシュボード</title>
+<title>HRCloud ライブラリ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #F5F4F0;
-    --surface: #FFFFFF;
-    --border: #E2E0D8;
-    --text-primary: #1A1916;
-    --text-secondary: #6B6860;
-    --text-muted: #9C9A92;
-    --accent-new: #2D6BE4;
-    --accent-mid: #12A05C;
-    --tag-bg: #EEECEA;
-    --tag-text: #4A4844;
+    --bg: #F5F4F0; --surface: #FFFFFF; --border: #E2E0D8;
+    --text-primary: #1A1916; --text-secondary: #6B6860; --text-muted: #9C9A92;
+    --accent-new: #2D6BE4; --accent-mid: #12A05C;
+    --tag-bg: #EEECEA; --tag-text: #4A4844;
     --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
     --shadow-hover: 0 4px 12px rgba(0,0,0,0.10), 0 12px 40px rgba(0,0,0,0.08);
-    --radius: 12px;
-    --font-jp: 'Noto Sans JP', sans-serif;
-    --font-en: 'DM Sans', sans-serif;
+    --radius: 12px; --font-jp: 'Noto Sans JP', sans-serif; --font-en: 'DM Sans', sans-serif;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); font-family: var(--font-jp); color: var(--text-primary); min-height: 100vh; }
 
-  body {
-    background: var(--bg);
-    font-family: var(--font-jp);
-    color: var(--text-primary);
-    min-height: 100vh;
-  }
-
-  /* ── Header ── */
-  header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 32px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .header-inner {
-    max-width: 1280px;
-    margin: 0 auto;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .logo {
-    font-family: var(--font-en);
-    font-weight: 500;
-    font-size: 15px;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-    flex-shrink: 0;
-  }
+  /* Header */
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 32px; position: sticky; top: 0; z-index: 100; }
+  .header-inner { max-width: 1280px; margin: 0 auto; height: 60px; display: flex; align-items: center; gap: 16px; }
+  .logo { font-family: var(--font-en); font-weight: 500; font-size: 15px; letter-spacing: -0.02em; color: var(--text-primary); flex-shrink: 0; }
   .logo span { color: var(--accent-new); }
-  .header-divider { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
-  .header-subtitle { font-size: 13px; color: var(--text-muted); flex: 1; }
   #last-updated { font-size: 12px; color: var(--text-muted); font-family: var(--font-en); }
 
-  /* ── View toggle ── */
-  .view-toggle {
-    display: flex;
-    gap: 2px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 3px;
-    flex-shrink: 0;
-  }
-  .view-btn {
-    width: 32px; height: 28px;
-    border: none;
-    background: transparent;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
-    transition: all 0.15s;
-  }
-  .view-btn.active {
-    background: var(--surface);
-    color: var(--text-primary);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  }
-  .view-btn:hover:not(.active) { color: var(--text-secondary); }
+  /* View toggle */
+  .view-toggle { display: flex; gap: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 3px; flex-shrink: 0; }
+  .view-btn { width: 32px; height: 28px; border: none; background: transparent; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: all 0.15s; }
+  .view-btn.active { background: var(--surface); color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
-  /* ── Main ── */
-  main { max-width: 1280px; margin: 0 auto; padding: 32px 32px 64px; }
+  /* Tabs */
+  .tabs { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 32px; }
+  .tabs-inner { max-width: 1280px; margin: 0 auto; display: flex; }
+  .tab-btn { padding: 14px 20px; font-size: 14px; font-family: var(--font-jp); font-weight: 500; color: var(--text-muted); border: none; background: transparent; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+  .tab-btn:hover { color: var(--text-secondary); }
+  .tab-btn.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+  .tab-count { font-size: 11px; background: var(--tag-bg); color: var(--tag-text); padding: 1px 7px; border-radius: 100px; font-weight: 600; }
+  .tab-btn.active .tab-count { background: var(--text-primary); color: #fff; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
 
-  /* ── Filter Bar ── */
-  .filter-bar {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-    align-items: center;
-  }
-  .filter-label {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-right: 4px;
-    font-family: var(--font-en);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
+  /* Main */
+  main { max-width: 1280px; margin: 0 auto; padding: 28px 32px 64px; }
+
+  /* Filter bar */
+  .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; align-items: center; }
+  .filter-label { font-size: 12px; color: var(--text-muted); font-family: var(--font-en); letter-spacing: 0.04em; text-transform: uppercase; flex-shrink: 0; }
   .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
-  .filter-btn {
-    padding: 6px 14px;
+  .filter-btn { padding: 6px 14px; border-radius: 100px; border: 1px solid var(--border); background: var(--surface); font-size: 13px; font-family: var(--font-jp); color: var(--text-secondary); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .filter-btn:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+  .filter-btn.active { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
+  .filter-divider { width: 1px; height: 24px; background: var(--border); margin: 0 2px; flex-shrink: 0; }
+  .count-badge { font-size: 12px; color: var(--text-muted); margin-left: auto; font-family: var(--font-en); }
+
+  /* Dropdown select（業種・都道府県） */
+  .filter-select {
+    padding: 6px 28px 6px 12px;
     border-radius: 100px;
     border: 1px solid var(--border);
     background: var(--surface);
@@ -122,188 +65,98 @@
     font-family: var(--font-jp);
     color: var(--text-secondary);
     cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239C9A92' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    transition: border-color 0.15s;
   }
-  .filter-btn:hover { border-color: var(--text-secondary); color: var(--text-primary); }
-  .filter-btn.active { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
-  .filter-divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
-  .count-badge { font-size: 12px; color: var(--text-muted); margin-left: auto; font-family: var(--font-en); }
+  .filter-select:focus, .filter-select:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+  .filter-select.has-value { background-color: var(--text-primary); color: #fff; border-color: var(--text-primary); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); }
 
-  /* ── CARD VIEW (画像あり) ── */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
-  }
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: box-shadow 0.2s, transform 0.2s;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    opacity: 0;
-    transform: translateY(8px);
-    animation: fadeUp 0.3s forwards;
-  }
+  /* Search box */
+  .search-wrap { position: relative; }
+  .search-input { padding: 7px 14px 7px 32px; border-radius: 100px; border: 1px solid var(--border); background: var(--surface); font-size: 13px; font-family: var(--font-jp); color: var(--text-primary); outline: none; width: 180px; transition: border-color 0.15s, width 0.2s; }
+  .search-input:focus { border-color: var(--accent-new); width: 240px; }
+  .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+
+  /* Sort */
+  .sort-select { padding: 6px 28px 6px 12px; border-radius: 100px; border: 1px solid var(--border); background: var(--surface); font-size: 13px; font-family: var(--font-jp); color: var(--text-secondary); cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239C9A92' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+
+  /* Card grid */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: box-shadow 0.2s, transform 0.2s; cursor: pointer; display: flex; flex-direction: column; opacity: 0; transform: translateY(8px); animation: fadeUp 0.3s forwards; }
   .card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
   @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-
   .thumb-wrap { position: relative; overflow: hidden; }
-  .thumb-wrap img {
-    width: 100%;
-    aspect-ratio: 16/9;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.3s;
-  }
+  .thumb-wrap img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; transition: transform 0.3s; }
   .card:hover .thumb-wrap img { transform: scale(1.03); }
-  .thumb-placeholder {
-    width: 100%;
-    aspect-ratio: 16/9;
-    background: linear-gradient(135deg, #EEECEA 0%, #E2E0D8 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  .thumb-placeholder { width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, #EEECEA 0%, #E2E0D8 100%); display: flex; align-items: center; justify-content: center; }
   .thumb-placeholder svg { opacity: 0.25; }
-
   .card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
   .card-tags { display: flex; gap: 4px; flex-wrap: wrap; }
-  .tag {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 100px;
-    font-family: var(--font-jp);
-    background: var(--tag-bg);
-    color: var(--tag-text);
-    font-weight: 500;
-    white-space: nowrap;
-  }
+  .tag { font-size: 11px; padding: 2px 8px; border-radius: 100px; background: var(--tag-bg); color: var(--tag-text); font-weight: 500; white-space: nowrap; }
   .tag.new { background: #EBF1FC; color: #2255B8; }
   .tag.mid { background: #E8F7F1; color: #0E7A45; }
   .card-title { font-size: 14px; font-weight: 500; line-height: 1.5; color: var(--text-primary); flex: 1; }
-  .card-open {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    color: var(--accent-new);
-    font-weight: 500;
-    margin-top: 4px;
-    transition: gap 0.15s;
-  }
+  .card-meta { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+  .card-open { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--accent-new); font-weight: 500; margin-top: 4px; transition: gap 0.15s; }
   .card-open:hover { gap: 8px; }
 
-  /* ── LIST VIEW (タイトルのみ) ── */
-  .list { display: flex; flex-direction: column; gap: 0; }
-  .list-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 0;
-    border-bottom: none;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 14px 20px;
-    cursor: pointer;
-    transition: background 0.15s;
-    opacity: 0;
-    animation: fadeUp 0.2s forwards;
-  }
+  /* List view */
+  .list { display: flex; flex-direction: column; }
+  .list-item { background: var(--surface); border: 1px solid var(--border); border-bottom: none; display: flex; align-items: center; gap: 16px; padding: 14px 20px; cursor: pointer; transition: background 0.15s; opacity: 0; animation: fadeUp 0.2s forwards; }
   .list-item:first-child { border-radius: var(--radius) var(--radius) 0 0; }
   .list-item:last-child { border-bottom: 1px solid var(--border); border-radius: 0 0 var(--radius) var(--radius); }
   .list-item:only-child { border-radius: var(--radius); border-bottom: 1px solid var(--border); }
   .list-item:hover { background: var(--bg); }
-  .list-item-tags { display: flex; gap: 4px; flex-shrink: 0; }
   .list-item-title { font-size: 14px; font-weight: 500; flex: 1; line-height: 1.4; }
-  .list-item-category { font-size: 12px; color: var(--text-muted); flex-shrink: 0; }
-  .list-item-arrow { color: var(--text-muted); flex-shrink: 0; }
+  .list-item-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .list-item-category { font-size: 12px; color: var(--text-muted); }
+  .list-item-clicks { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 3px; }
 
-  /* ── Modal ── */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(20,19,18,0.5);
-    backdrop-filter: blur(4px);
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-  }
+  /* 導入事例カード（サムネなし） */
+  .case-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .case-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); transition: box-shadow 0.2s, transform 0.2s; cursor: pointer; display: flex; flex-direction: column; opacity: 0; transform: translateY(8px); animation: fadeUp 0.3s forwards; text-decoration: none; color: inherit; overflow: hidden; }
+  .case-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .case-body { padding: 20px 20px 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .case-company { font-size: 17px; font-weight: 600; line-height: 1.4; }
+  .case-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+  .case-tag { font-size: 11px; padding: 2px 8px; border-radius: 100px; background: var(--tag-bg); color: var(--tag-text); font-weight: 500; white-space: nowrap; }
+  .case-tag.industry { background: #EBF1FC; color: #2255B8; }
+  .case-tag.pref { background: #E8F7F1; color: #0E7A45; }
+  .case-tag.kw { background: #F3EEFB; color: #6B35B8; }
+  .case-excerpt { font-size: 13px; color: var(--text-secondary); line-height: 1.75; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .case-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--border); margin-top: 4px; }
+  .case-size { font-size: 12px; color: var(--text-muted); }
+  .case-link { font-size: 12px; color: var(--accent-new); font-weight: 500; display: flex; align-items: center; gap: 4px; transition: gap 0.15s; }
+  .case-link:hover { gap: 8px; }
+
+  /* Modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(20,19,18,0.5); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
   .modal-overlay.open { opacity: 1; pointer-events: auto; }
-  .modal {
-    background: var(--surface);
-    border-radius: 16px;
-    max-width: 680px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    transform: scale(0.96);
-    transition: transform 0.2s;
-    border: 1px solid var(--border);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-  }
+  .modal { background: var(--surface); border-radius: 16px; max-width: 680px; width: 100%; max-height: 90vh; overflow-y: auto; transform: scale(0.96); transition: transform 0.2s; border: 1px solid var(--border); box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
   .modal-overlay.open .modal { transform: scale(1); }
-  .modal-img {
-    width: 100%;
-    aspect-ratio: 16/9;
-    object-fit: cover;
-    border-radius: 16px 16px 0 0;
-    display: block;
-    background: var(--bg);
-  }
+  .modal-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 16px 16px 0 0; display: block; background: var(--bg); }
   .modal-body { padding: 24px 28px 28px; }
   .modal-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
   .modal-title { font-size: 22px; font-weight: 600; line-height: 1.4; margin-bottom: 8px; }
   .modal-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px; }
   .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-  .btn-primary {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 10px 20px; border-radius: 8px;
-    background: var(--text-primary); color: #fff;
-    font-size: 14px; font-weight: 500; text-decoration: none;
-    border: none; cursor: pointer; font-family: var(--font-jp);
-    transition: opacity 0.15s;
-  }
+  .btn-primary { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 8px; background: var(--text-primary); color: #fff; font-size: 14px; font-weight: 500; text-decoration: none; border: none; cursor: pointer; font-family: var(--font-jp); transition: opacity 0.15s; }
   .btn-primary:hover { opacity: 0.85; }
-  .btn-secondary {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 10px 20px; border-radius: 8px;
-    background: #FFF1EE; color: #C0391A;
-    font-size: 14px; font-weight: 500; text-decoration: none;
-    border: 1px solid #F5C4B8; cursor: pointer; font-family: var(--font-jp);
-    transition: opacity 0.15s;
-  }
+  .btn-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 8px; background: #FFF1EE; color: #C0391A; font-size: 14px; font-weight: 500; text-decoration: none; border: 1px solid #F5C4B8; cursor: pointer; font-family: var(--font-jp); transition: opacity 0.15s; }
   .btn-secondary:hover { opacity: 0.8; }
-  .btn-close {
-    position: absolute; top: 16px; right: 16px;
-    width: 36px; height: 36px; border-radius: 50%;
-    background: rgba(0,0,0,0.5); border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 18px; transition: background 0.15s;
-  }
+  .btn-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.5); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; transition: background 0.15s; }
   .btn-close:hover { background: rgba(0,0,0,0.75); }
   .modal-inner { position: relative; }
 
-  /* ── Empty / Loading ── */
-  .empty { grid-column: 1/-1; text-align: center; padding: 80px 20px; color: var(--text-muted); font-size: 14px; }
-  .loading { grid-column: 1/-1; display: flex; justify-content: center; padding: 80px; }
-  .spinner {
-    width: 32px; height: 32px;
-    border: 2px solid var(--border);
-    border-top-color: var(--text-primary);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
+  /* Empty / Loading */
+  .empty { text-align: center; padding: 80px 20px; color: var(--text-muted); font-size: 14px; }
+  .loading { display: flex; justify-content: center; padding: 80px; }
+  .spinner { width: 32px; height: 32px; border: 2px solid var(--border); border-top-color: var(--text-primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
@@ -312,46 +165,75 @@
 <header>
   <div class="header-inner">
     <div class="logo">HR<span>Cloud</span></div>
-    <div class="header-divider"></div>
-    <div class="header-subtitle">資料ライブラリ</div>
+    <div style="flex:1"></div>
     <div id="last-updated"></div>
-    <!-- 表示切り替えボタン -->
-    <div class="view-toggle">
+    <div class="view-toggle" id="view-toggle-doc">
       <button class="view-btn active" id="btn-card" onclick="setView('card')" title="カード表示">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-        </svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       </button>
       <button class="view-btn" id="btn-list" onclick="setView('list')" title="リスト表示">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-        </svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
     </div>
   </div>
 </header>
 
+<div class="tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="switchTab('docs')">📄 資料ライブラリ <span class="tab-count" id="tab-count-docs">0</span></button>
+    <button class="tab-btn" onclick="switchTab('cases')">🏢 導入事例 <span class="tab-count" id="tab-count-cases">0</span></button>
+  </div>
+</div>
+
 <main>
-  <div class="filter-bar">
-    <span class="filter-label">対象</span>
-    <div class="filter-group" id="target-filters">
-      <button class="filter-btn active" data-target="all">すべて</button>
-      <button class="filter-btn" data-target="新卒">新卒</button>
-      <button class="filter-btn" data-target="中途">中途</button>
+
+  <!-- 資料ライブラリ -->
+  <div class="tab-panel active" id="panel-docs">
+    <div class="filter-bar">
+      <span class="filter-label">対象</span>
+      <div class="filter-group" id="target-filters">
+        <button class="filter-btn active" data-target="all">すべて</button>
+        <button class="filter-btn" data-target="新卒">新卒</button>
+        <button class="filter-btn" data-target="中途">中途</button>
+      </div>
+      <div class="filter-divider"></div>
+      <span class="filter-label">カテゴリ</span>
+      <div class="filter-group" id="category-filters"></div>
+      <div class="filter-divider"></div>
+      <select class="sort-select" id="sort-select" onchange="render()">
+        <option value="default">並び順: デフォルト</option>
+        <option value="clicks">クリック数が多い順</option>
+      </select>
+      <span class="count-badge" id="count-badge-docs"></span>
     </div>
-    <div class="filter-divider"></div>
-    <span class="filter-label">カテゴリ</span>
-    <div class="filter-group" id="category-filters"></div>
-    <span class="count-badge" id="count-badge"></span>
+    <div id="grid"><div class="loading"><div class="spinner"></div></div></div>
   </div>
 
-  <div class="grid" id="grid">
-    <div class="loading"><div class="spinner"></div></div>
+  <!-- 導入事例 -->
+  <div class="tab-panel" id="panel-cases">
+    <div class="filter-bar">
+      <span class="filter-label">業種</span>
+      <select class="filter-select" id="industry-select" onchange="onIndustryChange()">
+        <option value="all">すべての業種</option>
+      </select>
+      <div class="filter-divider"></div>
+      <span class="filter-label">都道府県</span>
+      <select class="filter-select" id="pref-select" onchange="onPrefChange()">
+        <option value="all">すべての都道府県</option>
+      </select>
+      <div class="filter-divider"></div>
+      <div class="search-wrap">
+        <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="search-input" type="text" id="case-search" placeholder="キーワード・課題タグで検索..." oninput="renderCases()">
+      </div>
+      <span class="count-badge" id="count-badge-cases"></span>
+    </div>
+    <div id="case-grid"><div class="loading"><div class="spinner"></div></div></div>
   </div>
+
 </main>
 
-<!-- Modal -->
+<!-- 資料モーダル -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal">
     <div class="modal-inner">
@@ -379,22 +261,29 @@
 <script>
 const CONFIG = {
   SHEET_API_URL: 'https://script.google.com/a/macros/hr-cloud.co.jp/s/AKfycbwF2QgDN8nO5QccifAvh0a6msrbK6MtMro-DP6UrelfLXad3Bvifo14pYysVT3PNqW_IQ/exec',
-  USE_SAMPLE_DATA: false,
 };
 
-const SAMPLE_DATA = [
-  { title: '採用説明資料（会社紹介）', category: '会社紹介', target: '新卒', fileUrl: '#', thumbUrl: '', pdfUrl: '#', description: '会社の事業内容・カルチャー・働き方をまとめた説明会用資料です。' },
-  { title: '営業資料（標準版）', category: '営業資料', target: '新卒', fileUrl: '#', thumbUrl: '', pdfUrl: '#', description: '新規顧客向けのサービス紹介・料金プラン・導入事例を含む標準営業資料。' },
-  { title: 'LINE連携 機能紹介', category: '機能紹介', target: '新卒', fileUrl: '#', thumbUrl: '', pdfUrl: '#', description: 'LINE公式アカウントとの連携機能を解説した機能紹介資料。' },
+// 導入事例サンプル（Apps Script連携後はシートから取得）
+const SAMPLE_CASES = [
+  {
+    company: '株式会社ビーライトグループ',
+    industry: '設備・設計施工',
+    size: '約90名',
+    pref: '愛知県',
+    tags: ['母集団形成', '工数削減', 'データ可視化'],
+    keywords: ['ATS', '採用管理', '建設業', 'エージェント'],
+    excerpt: '可視化×効率化で母集団3倍、業務工数8割圧縮。少数体制で運用しながらもデータの可視化と業務の効率化を軸にした仕組み化で、エージェント経由のエントリー数が約3倍に増加。',
+    url: 'https://www.career-cloud.asia/lp/interview/b-light',
+  },
 ];
 
-// ── JSONP fetch（CORS回避）
+// ── JSONP fetch
 function fetchGAS(url) {
   return new Promise((resolve, reject) => {
     const cbName = 'cb_' + Date.now();
     const script = document.createElement('script');
     window[cbName] = (data) => { delete window[cbName]; document.body.removeChild(script); resolve(data); };
-    script.onerror = () => reject(new Error('読み込み失敗'));
+    script.onerror = () => reject(new Error('失敗'));
     script.src = url + '?callback=' + cbName;
     document.body.appendChild(script);
     setTimeout(() => reject(new Error('タイムアウト')), 10000);
@@ -402,12 +291,20 @@ function fetchGAS(url) {
 }
 
 // ── State
-let allData = [];
-let activeTarget = 'all';
-let activeCategory = 'all';
-let currentView = 'card'; // 'card' or 'list'
+let allDocs = [], allCases = SAMPLE_CASES;
+let activeTarget = 'all', activeCategory = 'all';
+let activeIndustry = 'all', activePref = 'all';
+let currentView = 'card';
 
-// ── View切り替え
+// ── Tab
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', ['docs','cases'][i] === tab));
+  document.getElementById('panel-docs').classList.toggle('active', tab === 'docs');
+  document.getElementById('panel-cases').classList.toggle('active', tab === 'cases');
+  document.getElementById('view-toggle-doc').style.display = tab === 'docs' ? 'flex' : 'none';
+}
+
+// ── View
 function setView(mode) {
   currentView = mode;
   document.getElementById('btn-card').classList.toggle('active', mode === 'card');
@@ -417,30 +314,28 @@ function setView(mode) {
 
 // ── Init
 async function init() {
-  if (CONFIG.USE_SAMPLE_DATA) {
-    allData = SAMPLE_DATA;
-    document.getElementById('last-updated').textContent = 'サンプルデータ表示中';
-  } else {
-    try {
-      const json = await fetchGAS(CONFIG.SHEET_API_URL);
-      allData = json.data;
-      document.getElementById('last-updated').textContent =
-        '最終更新: ' + new Date(json.updatedAt).toLocaleString('ja-JP', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
-    } catch(e) {
-      document.getElementById('grid').innerHTML =
-        '<div class="empty">データの読み込みに失敗しました。<br>Apps Script のURLを確認してください。</div>';
-      return;
-    }
+  try {
+    const json = await fetchGAS(CONFIG.SHEET_API_URL);
+    allDocs  = json.docs || json.data || [];
+    if (json.cases && json.cases.length) allCases = json.cases;
+    document.getElementById('last-updated').textContent =
+      '最終更新: ' + new Date(json.updatedAt).toLocaleString('ja-JP', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
+  } catch(e) {
+    document.getElementById('grid').innerHTML = '<div class="empty">データの読み込みに失敗しました。</div>';
   }
-  buildCategoryFilters();
+  buildDocFilters();
+  buildCaseDropdowns();
   render();
+  renderCases();
+  document.getElementById('tab-count-docs').textContent = allDocs.length;
+  document.getElementById('tab-count-cases').textContent = allCases.length;
 }
 
-function buildCategoryFilters() {
-  const cats = ['all', ...new Set(allData.map(d => d.category))];
-  const wrap = document.getElementById('category-filters');
-  wrap.innerHTML = cats.map(c =>
-    `<button class="filter-btn${c==='all'?' active':''}" data-category="${c}" onclick="setCategory('${c}')">${c === 'all' ? 'すべて' : c}</button>`
+// ── 資料フィルター
+function buildDocFilters() {
+  const cats = ['all', ...new Set(allDocs.map(d => d.category).filter(Boolean))];
+  document.getElementById('category-filters').innerHTML = cats.map(c =>
+    `<button class="filter-btn${c==='all'?' active':''}" data-category="${c}" onclick="setCategory('${c}')">${c==='all'?'すべて':c}</button>`
   ).join('');
 }
 
@@ -454,95 +349,149 @@ document.getElementById('target-filters').addEventListener('click', e => {
 
 function setCategory(cat) {
   activeCategory = cat;
-  document.querySelectorAll('[data-category]').forEach(b =>
-    b.classList.toggle('active', b.dataset.category === cat));
+  document.querySelectorAll('[data-category]').forEach(b => b.classList.toggle('active', b.dataset.category===cat));
   render();
 }
 
-// ── Render
+// ── 資料レンダリング
 function render() {
-  const filtered = allData.filter(d => {
-    const targetOk = activeTarget === 'all' || d.target === activeTarget;
-    const catOk    = activeCategory === 'all' || d.category === activeCategory;
-    return targetOk && catOk;
+  let filtered = allDocs.filter(d => {
+    const tOk = activeTarget === 'all' || d.target === activeTarget;
+    const cOk = activeCategory === 'all' || d.category === activeCategory;
+    return tOk && cOk;
   });
-
-  document.getElementById('count-badge').textContent = `${filtered.length} 件`;
-
-  if (!filtered.length) {
-    document.getElementById('grid').innerHTML = '<div class="empty">該当する資料がありません。</div>';
-    return;
+  if (document.getElementById('sort-select').value === 'clicks') {
+    filtered.sort((a, b) => (b.clicks||0) - (a.clicks||0));
   }
-
+  document.getElementById('count-badge-docs').textContent = `${filtered.length} 件`;
   const grid = document.getElementById('grid');
+  if (!filtered.length) { grid.innerHTML = '<div class="empty">該当する資料がありません。</div>'; return; }
 
   if (currentView === 'card') {
     grid.className = 'grid';
     grid.innerHTML = filtered.map((d, i) => `
-      <div class="card" style="animation-delay:${i * 30}ms" onclick="openModal(${allData.indexOf(d)})">
+      <div class="card" style="animation-delay:${i*30}ms" onclick="openModal(${allDocs.indexOf(d)})">
         <div class="thumb-wrap">
           ${d.thumbUrl
             ? `<img src="${d.thumbUrl}" alt="${d.title}" loading="lazy">`
-            : `<div class="thumb-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>`
-          }
+            : `<div class="thumb-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>`}
         </div>
         <div class="card-body">
           <div class="card-tags">
-            <span class="tag ${d.target === '新卒' ? 'new' : 'mid'}">${d.target}</span>
+            ${d.target ? `<span class="tag ${d.target==='新卒'?'new':'mid'}">${d.target}</span>` : ''}
             <span class="tag">${d.category}</span>
           </div>
           <div class="card-title">${d.title}</div>
-          <span class="card-open">
-            開く
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-          </span>
+          ${d.clicks ? `<div class="card-meta"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>${d.clicks}回閲覧</div>` : ''}
+          <span class="card-open">開く <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
         </div>
-      </div>
-    `).join('');
+      </div>`).join('');
   } else {
     grid.className = 'list';
     grid.innerHTML = filtered.map((d, i) => `
-      <div class="list-item" style="animation-delay:${i * 20}ms" onclick="openModal(${allData.indexOf(d)})">
-        <div class="list-item-tags">
-          <span class="tag ${d.target === '新卒' ? 'new' : 'mid'}">${d.target}</span>
-        </div>
+      <div class="list-item" style="animation-delay:${i*20}ms" onclick="openModal(${allDocs.indexOf(d)})">
+        ${d.target ? `<span class="tag ${d.target==='新卒'?'new':'mid'}">${d.target}</span>` : ''}
         <div class="list-item-title">${d.title}</div>
-        <div class="list-item-category">${d.category}</div>
-        <svg class="list-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-    `).join('');
+        <div class="list-item-right">
+          <span class="list-item-category">${d.category}</span>
+          ${d.clicks ? `<span class="list-item-clicks"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>${d.clicks}</span>` : ''}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      </div>`).join('');
   }
 }
 
-// ── Modal
+// ── 導入事例ドロップダウン構築
+function buildCaseDropdowns() {
+  const industries = [...new Set(allCases.map(c => c.industry).filter(Boolean))].sort();
+  const iSel = document.getElementById('industry-select');
+  industries.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; iSel.appendChild(o); });
+
+  const prefs = [...new Set(allCases.map(c => c.pref).filter(Boolean))].sort();
+  const pSel = document.getElementById('pref-select');
+  prefs.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; pSel.appendChild(o); });
+}
+
+function onIndustryChange() {
+  const sel = document.getElementById('industry-select');
+  activeIndustry = sel.value;
+  sel.classList.toggle('has-value', sel.value !== 'all');
+  renderCases();
+}
+function onPrefChange() {
+  const sel = document.getElementById('pref-select');
+  activePref = sel.value;
+  sel.classList.toggle('has-value', sel.value !== 'all');
+  renderCases();
+}
+
+// ── 導入事例レンダリング
+function renderCases() {
+  const kw = (document.getElementById('case-search').value || '').toLowerCase();
+  const filtered = allCases.filter(c => {
+    const iOk = activeIndustry === 'all' || c.industry === activeIndustry;
+    const pOk = activePref === 'all' || c.pref === activePref;
+    const searchTarget = [c.company, c.industry, c.pref, c.excerpt, ...(c.tags||[]), ...(c.keywords||[])].join(' ').toLowerCase();
+    const kOk = !kw || searchTarget.includes(kw);
+    return iOk && pOk && kOk;
+  });
+
+  document.getElementById('count-badge-cases').textContent = `${filtered.length} 件`;
+  const grid = document.getElementById('case-grid');
+  if (!filtered.length) { grid.innerHTML = '<div class="empty">該当する事例がありません。</div>'; return; }
+
+  grid.className = 'case-grid';
+  grid.innerHTML = filtered.map((c, i) => `
+    <a class="case-card" href="${c.url}" target="_blank" style="animation-delay:${i*40}ms">
+      <div class="case-body">
+        <div class="case-company">${c.company}</div>
+        <div class="case-tags">
+          ${c.industry ? `<span class="case-tag industry">${c.industry}</span>` : ''}
+          ${c.pref ? `<span class="case-tag pref">${c.pref}</span>` : ''}
+          ${(c.tags||[]).map(t => `<span class="case-tag">${t}</span>`).join('')}
+          ${(c.keywords||[]).map(k => `<span class="case-tag kw">${k}</span>`).join('')}
+        </div>
+        <div class="case-excerpt">${c.excerpt}</div>
+        <div class="case-footer">
+          <span class="case-size">${c.size || ''}</span>
+          <span class="case-link">記事を読む <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+        </div>
+      </div>
+    </a>`).join('');
+}
+
+// ── 資料モーダル
 function openModal(idx) {
-  const d = allData[idx];
+  const d = allDocs[idx];
   document.getElementById('modal-img').src = d.thumbUrl || '';
   document.getElementById('modal-img').style.display = d.thumbUrl ? 'block' : 'none';
   document.getElementById('modal-tags').innerHTML =
-    `<span class="tag ${d.target==='新卒'?'new':'mid'}">${d.target}</span><span class="tag">${d.category}</span>`;
+    `${d.target?`<span class="tag ${d.target==='新卒'?'new':'mid'}">${d.target}</span>`:''}<span class="tag">${d.category}</span>`;
   document.getElementById('modal-title').textContent = d.title;
   document.getElementById('modal-desc').textContent = d.description || '';
-
-  const linkEl = document.getElementById('modal-link');
-  linkEl.href = d.fileUrl || '#';
-  linkEl.style.display = d.fileUrl && d.fileUrl !== '#' ? 'inline-flex' : 'none';
-
-  const pdfEl = document.getElementById('modal-pdf-link');
-  pdfEl.href = d.pdfUrl || '#';
-  pdfEl.style.display = d.pdfUrl && d.pdfUrl !== '#' ? 'inline-flex' : 'none';
-
+  const lEl = document.getElementById('modal-link');
+  lEl.href = d.fileUrl||'#'; lEl.style.display = d.fileUrl && d.fileUrl!=='#' ? 'inline-flex' : 'none';
+  const pEl = document.getElementById('modal-pdf-link');
+  pEl.href = d.pdfUrl||'#'; pEl.style.display = d.pdfUrl && d.pdfUrl!=='#' ? 'inline-flex' : 'none';
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  recordClick(d.rowIndex);
+}
+
+function recordClick(rowIndex) {
+  if (!rowIndex) return;
+  const script = document.createElement('script');
+  script.src = CONFIG.SHEET_API_URL + '?action=click&row=' + rowIndex;
+  document.body.appendChild(script);
+  setTimeout(() => script.remove(), 3000);
 }
 
 function closeModal(e) {
-  if (e && e.target !== document.getElementById('modal-overlay') && e.type !== 'click') return;
-  if (e && e.currentTarget !== e.target && e.target.closest('.modal')) return;
+  if (e && e.target !== document.getElementById('modal-overlay')) return;
+  if (e && e.target.closest && e.target.closest('.modal')) return;
   document.getElementById('modal-overlay').classList.remove('open');
   document.body.style.overflow = '';
 }
-
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 init();
